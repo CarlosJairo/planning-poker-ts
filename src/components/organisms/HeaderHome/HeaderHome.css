@@ -1,0 +1,32 @@
+.header-home {
+  justify-content: flex-start;
+  padding: 3rem 1rem;
+}
+
+.header-home h2 {
+  font-size: clamp(1rem, 6vw, 1.5rem);
+}
+
+.logo-subtitulo-ctn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 479px) {
+  .header-home {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-home {
+    padding: 3rem 3rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .header-home {
+    padding: 5rem 3rem;
+  }
+}
