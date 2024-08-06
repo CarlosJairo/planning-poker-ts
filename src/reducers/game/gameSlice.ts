@@ -15,7 +15,7 @@ interface Player {
 }
 
 interface GameState {
-  gameName: string;
+  gameName: string | undefined;
   state: "no_started" | "started" | "ready_to_show_cards" | "revealed_cards";
   players: Player[];
   admins: string[];
@@ -29,26 +29,26 @@ const initialState: GameState = {
   gameName: "",
   state: "no_started",
   players: [
-    { id: "1", name: "Laura", rol: ["viwer"], voted: false },
-    {
-      id: "3",
-      name: "Carlos",
-      rol: ["player"],
-      voted: { id: "3", str: "5", value: 5 },
-    },
-    {
-      id: "4",
-      name: "Tomas",
-      rol: ["player"],
-      voted: { id: "1", str: "1", value: 1 },
-    },
-    { id: "5", name: "Andrés", rol: ["viwer"], voted: false },
-    {
-      id: "6",
-      name: "Camilo",
-      rol: ["player"],
-      voted: { id: "4", str: "8", value: 8 },
-    },
+    // { id: "1", name: "Laura", rol: ["viwer"], voted: false },
+    // {
+    //   id: "3",
+    //   name: "Carlos",
+    //   rol: ["player"],
+    //   voted: { id: "3", str: "5", value: 5 },
+    // },
+    // {
+    //   id: "4",
+    //   name: "Tomas",
+    //   rol: ["player"],
+    //   voted: { id: "1", str: "1", value: 1 },
+    // },
+    // { id: "5", name: "Andrés", rol: ["viwer"], voted: false },
+    // {
+    //   id: "6",
+    //   name: "Camilo",
+    //   rol: ["player"],
+    //   voted: { id: "4", str: "8", value: 8 },
+    // },
   ],
   admins: [],
   selectedCards: [],
@@ -118,7 +118,7 @@ const gameSlice = createSlice({
   reducers: {
     createGame: (
       state,
-      action: PayloadAction<{ gameName: string; player: Player }>
+      action: PayloadAction<{ gameName: string | undefined; player: Player }>
     ) => {
       state.gameName = action.payload.gameName;
       state.state = "started";
@@ -126,9 +126,9 @@ const gameSlice = createSlice({
       state.players = [...state.players, action.payload.player];
       state.poolCards = state.allPoolCards["fibonacci"];
       state.selectedCards = [
-        { id: "3", str: "5", value: 5 },
-        { id: "1", str: "1", value: 1 },
-        { id: "4", str: "8", value: 8 },
+        // { id: "3", str: "5", value: 5 },
+        // { id: "1", str: "1", value: 1 },
+        // { id: "4", str: "8", value: 8 },
       ];
     },
     selectCard: (state, action: PayloadAction<{ card: Card; id: string }>) => {

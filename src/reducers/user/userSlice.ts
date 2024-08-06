@@ -9,7 +9,7 @@ interface UserState {
 
 const initialState: UserState = {
   id: "",
-  name: "carlitos",
+  name: "",
   rolCurrentUser: [],
   voted: false,
 };

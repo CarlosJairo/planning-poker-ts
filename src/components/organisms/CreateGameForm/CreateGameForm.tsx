@@ -69,7 +69,9 @@ const CreateGameForm: React.FC = () => {
         {isError && messageError.name ? messageError.name : " "}
       </p>
 
-      <ButtonSubmit disabled={!isError ? false : true}>
+      <ButtonSubmit
+        disabled={!isError && formValue.name.length > 0 ? false : true}
+      >
         Crear partida
       </ButtonSubmit>
     </form>
