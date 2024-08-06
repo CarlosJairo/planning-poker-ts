@@ -18,3 +18,7 @@
   height: 100vh;
   animation: fadeIn 1s ease-out;
 }
+
+.chip-poker {
+  width: clamp(2rem, 15vw, 5rem);
+}

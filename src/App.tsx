@@ -1,5 +1,4 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
 // import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./app/store";
 import { useState } from "react";
@@ -31,6 +30,8 @@ function App() {
               )
             }
           />
+          <Route path="/game/:gameName" element={<h1>Hola</h1>} />
+          {/* <Route path="/game/:gameName" element={<GameTableScreen />} /> */}
         </Routes>
       </HashRouter>
     </>
