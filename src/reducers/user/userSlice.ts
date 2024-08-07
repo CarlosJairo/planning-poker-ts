@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Card {
+  id: string;
+  str: string;
+  value: number;
+}
+
 interface UserState {
   id: string;
   name: string;
   rolCurrentUser: string[];
-  voted: boolean;
+  voted: boolean | Card;
 }
 
 const initialState: UserState = {
   id: "",
   name: "",
-  rolCurrentUser: [],
+  rolCurrentUser: ["owner"],
   voted: false,
 };
 
@@ -29,7 +35,7 @@ const userSlice = createSlice({
       state.name = action.payload.name;
       state.rolCurrentUser = action.payload.rol;
     },
-    voteCard: (state, action: PayloadAction<boolean>) => {
+    voteCard: (state, action: PayloadAction<boolean | Card>) => {
       state.voted = action.payload;
     },
     resetVoted: (state) => {

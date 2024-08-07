@@ -29,13 +29,13 @@ const initialState: GameState = {
   gameName: "",
   state: "no_started",
   players: [
-    // { id: "1", name: "Laura", rol: ["viwer"], voted: false },
-    // {
-    //   id: "3",
-    //   name: "Carlos",
-    //   rol: ["player"],
-    //   voted: { id: "3", str: "5", value: 5 },
-    // },
+    { id: "1", name: "Laura", rol: ["viwer"], voted: false },
+    {
+      id: "3",
+      name: "Carlos",
+      rol: ["player"],
+      voted: { id: "3", str: "5", value: 5 },
+    },
     // {
     //   id: "4",
     //   name: "Tomas",
@@ -126,6 +126,7 @@ const gameSlice = createSlice({
       state.players = [...state.players, action.payload.player];
       state.poolCards = state.allPoolCards["fibonacci"];
       state.selectedCards = [
+        { id: "3", str: "5", value: 5 },
         // { id: "3", str: "5", value: 5 },
         // { id: "1", str: "1", value: 1 },
         // { id: "4", str: "8", value: 8 },
@@ -211,6 +212,19 @@ const gameSlice = createSlice({
         state.state = "ready_to_show_cards";
       }
     },
+
+    addRolOwner: (state, action: PayloadAction<string>) => {
+      const playerId = action.payload;
+
+      // Colocar todos los players pero con admin en el nuevo usuario
+      state.players = state.players.map((p) =>
+        p.id === playerId ? { ...p, rol: [...p.rol, "owner"] } : p
+      );
+    },
+    changePoolCards: (state, action: PayloadAction<string>) => {
+      console.log(action.payload);
+      state.poolCards = state.allPoolCards[action.payload];
+    },
   },
 });
 
@@ -224,6 +238,8 @@ export const {
   restartGame,
   addPlayer,
   toggleViwer,
+  addRolOwner,
+  changePoolCards,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
