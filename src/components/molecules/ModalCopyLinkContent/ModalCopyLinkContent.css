@@ -1,0 +1,33 @@
+.subtitle-and-close {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #6429cd;
+  font-size: 1rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.input-btn-ctn-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 2rem 0 0;
+}
+
+.input-btn-ctn-modal input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #bb65ff;
+  border-radius: 1rem;
+  background-color: transparent;
+  color: white;
+  font-family: inherit;
+  outline: none;
+}

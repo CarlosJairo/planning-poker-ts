@@ -1,0 +1,19 @@
+.select-pool-cards {
+  position: absolute;
+  left: 0;
+  padding: 2px;
+  font-size: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #ffffffd7;
+  width: 6rem;
+  border: 1px solid #bb65ff;
+  box-shadow: 0 0 1rem #bc65ff18;
+  opacity: 0.8;
+}
+
+.select-pool-cards option {
+  background-color: #1f0d3f;
+  color: #ffffff;
+}

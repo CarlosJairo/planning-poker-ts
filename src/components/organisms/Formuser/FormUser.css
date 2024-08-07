@@ -1,0 +1,74 @@
+.user-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 300px;
+  margin: 0 auto;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+label[for="nombre-partida"] {
+  font-weight: 600;
+}
+
+.roles-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.roles-container > label {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.user-form button {
+  padding: 0.5rem 1rem;
+  color: #000000;
+  background-color: #eeecec;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.roles-container input[type="radio"] {
+  display: none;
+}
+
+.user-form button:hover {
+  background-color: #ffffff;
+}
+
+.user-form .radio-button {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #1f0d3f;
+  border: 1px solid #bb65ff;
+}
+
+.user-form .radio-button::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  background-color: #bb65ff;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.user-form button[disabled] {
+  cursor: default;
+  background-color: #9d9da1;
+}
+
+.user-form input:checked + label .radio-button::after {
+  opacity: 1;
+}

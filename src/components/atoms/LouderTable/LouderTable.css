@@ -1,0 +1,19 @@
+.louder-table {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.louder-table .louder {
+  position: absolute;
+  max-width: 90%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.louder-table p {
+  margin-top: 3.5rem;
+  font-weight: 200;
+}

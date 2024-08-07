@@ -1,0 +1,31 @@
+.btn-on-table {
+  padding: 0.3rem 2vw;
+  max-width: 230px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  border-radius: 50px;
+  background-color: #6429cd;
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  cursor: pointer;
+  transition: box-shadow 0.2s linear;
+}
+
+.btn-on-table:hover {
+  box-shadow: 0 0 0.8rem #bc65ffab;
+}
+
+.copy-link {
+  padding: 0.5rem 1rem;
+  color: #000000;
+  background-color: #eeecec;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.copy-link:hover {
+  box-shadow: 0 0 1.3rem #f6f7fcad, 0 0 1.3rem #f6f7fca6 inset;
+}
