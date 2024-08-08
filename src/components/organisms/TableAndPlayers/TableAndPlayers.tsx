@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import Locker from "../../molecules/Locker/Locker";
 import CurrentUserItem from "../../molecules/CurrentUserItem/CurrentUserItem";
-import "./TableAndPlayers.css";
 import UserItem from "../../molecules/UserItem/UserItem";
 import Table from "../../molecules/Table/Table";
+import "./TableAndPlayers.scss";
 
 // Exportar para hacer prueba unitaria
 export const filterPlayers = (
@@ -35,7 +35,7 @@ const TableAndPlayers: React.FC = () => {
   const filteredPlayers = filterPlayers(players, currentUser);
 
   return (
-    <section className="table-and-players">
+    <section className="o-table-and-players">
       <Locker className={"currentUser user-item"}>
         <CurrentUserItem user={currentUser} />
       </Locker>

@@ -6,6 +6,7 @@ import CardOnTable from "../../atoms/CardOnTable/CardOnTable";
 import UserLogo from "../../atoms/UserLogo/UserLogo";
 import { RootState } from "../../../app/store";
 import { addRolOwner } from "../../../reducers/game/gameSlice";
+import "./UserItem.scss";
 
 interface User {
   id: string;
@@ -39,13 +40,13 @@ const UserItem: React.FC<UserItemProps> = ({ user }) => {
   };
 
   return (
-    <div className={`user-item`}>
+    <div className={`m-user-item`}>
       {isViwer ? (
         <UserLogo name={name} />
       ) : (
         <CardOnTable voted={voted} revealedCards={revealedCards} />
       )}
-      <p className={"user-item-name"}>
+      <p className={"m-user-item__name"}>
         {isUserCurrentOwner && !isOwner && (
           <Button onClick={addAdmin}>
             <UserPlus className="" />

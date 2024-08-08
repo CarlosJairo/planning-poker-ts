@@ -2,7 +2,7 @@ import { useEffect, useState, ChangeEvent } from "react";
 import { useLocation } from "react-router-dom";
 import Button from "../../atoms/Button/Button";
 import { CloseSvg } from "../../atoms/Icons";
-import "./ModalCopyLinkContent.css";
+import "./ModalCopyLinkContent.scss";
 
 export const copyToClipboard = async (textToCopy: string): Promise<boolean> => {
   try {
@@ -44,16 +44,16 @@ const ModalCopyLinkContent: React.FC<ModalCopyLinkContentProps> = ({
 
   return (
     <>
-      <header className="subtitle-and-close">
+      <header className="m-modal__header">
         <p>Invitar jugadores</p>
         <Button onClick={toggleModalLink}>
           <CloseSvg />
         </Button>
       </header>
-      <div className="input-btn-ctn-modal">
+      <div className="m-modal__content">
         <input type="text" value={url} onChange={handleInputChange} />
 
-        <Button className={"copy-link"} onClick={handleClick}>
+        <Button className={"m-modal__content__copy-link"} onClick={handleClick}>
           {isCopied ? "Copiado" : "Copiar link"}
         </Button>
       </div>

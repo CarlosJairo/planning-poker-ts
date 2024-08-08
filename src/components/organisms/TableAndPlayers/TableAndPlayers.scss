@@ -1,4 +1,4 @@
-.table-and-players {
+.o-table-and-players {
   display: grid;
   grid-template-columns: 1fr 55% 1fr;
   grid-template-areas:
@@ -16,7 +16,7 @@
   margin: auto;
 }
 
-.table-and-players > * {
+.o-table-and-players > * {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +81,7 @@
 }
 
 @media (min-width: 479px) {
-  .table-and-players {
+  .o-table-and-players {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 50% 1fr;
     grid-template-areas:
@@ -96,7 +96,7 @@
     min-width: 290px;
   }
 
-  .table-and-players > * {
+  .o-table-and-players > * {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,0 +1,28 @@
+.o-modal {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  fill: rgba(10, 9, 12, 0.25);
+  z-index: 10;
+  backdrop-filter: blur(7.5px);
+
+  &__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1f0d3f;
+    box-shadow: 0 0 0.5rem #bb65ff;
+    padding: 2rem clamp(1rem, 10%, 3rem);
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 450px;
+    overflow: hidden;
+    height: auto;
+  }
+}

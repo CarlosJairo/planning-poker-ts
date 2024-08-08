@@ -3,17 +3,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import CardResult from "../../molecules/CardResult/CardResult";
 import Avarage from "../../molecules/Avarage/Avarage";
-import "./CardResultsCtn.css";
+import "./CardResultsCtn.scss";
 
 const CardResultsCtn: React.FC = () => {
   const results = useSelector((state: RootState) => state.game.results);
 
   return (
-    <section className="card-results-container">
-      <div className="cards-results">
+    <section className="o-card-results">
+      <div className="o-card-results__results">
         {results &&
           results.count.map((card) => (
-            <CardResult key={Math.random()} card={card} revealedCards={true} />
+            <CardResult key={Math.random()} card={card} />
           ))}
         <Avarage />
       </div>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Card.scss";
 
 interface CardProps {
   children: React.ReactNode;

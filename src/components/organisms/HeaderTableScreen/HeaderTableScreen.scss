@@ -1,0 +1,86 @@
+.o-header-game {
+  display: grid;
+  grid-template-columns: 30% 1fr 30%;
+  align-items: center;
+  padding: 0 0.8rem 0;
+  height: 6rem;
+
+  h1 {
+    text-align: center;
+    font-size: clamp(1.2rem, 6vw, 2rem);
+  }
+
+  &__a-chip {
+    width: clamp(2rem, 15vw, 5rem);
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 1vw;
+  }
+
+  &__invite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #f6f7fc;
+    font-size: 14px;
+    transition: box-shadow 0.2s linear;
+  }
+
+  &__invite:hover {
+    box-shadow: 0 0 1.3rem #f6f7fcad, 0 0 1.3rem #f6f7fca6 inset;
+  }
+
+  &__invite-text {
+    display: none;
+  }
+
+  &__user-plus {
+    fill: #f6f7fc;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (min-width: 479px) {
+  .o-header-game {
+    padding: 1rem 2rem;
+
+    &__menu {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+    &__invite {
+      width: auto;
+      padding: 0.3rem 0.6rem;
+      background-color: rgb(8, 8, 8);
+      font-weight: 500;
+      border: 1px solid white;
+      border-radius: 1.5rem;
+    }
+    &__invite-text {
+      display: flex;
+      text-wrap: wrap;
+    }
+    &__user-plus {
+      fill: #f6f7fc;
+      display: none;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .o-header-game {
+    padding: 1rem 3rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .o-header-game {
+    padding: 2rem 3rem;
+  }
+}

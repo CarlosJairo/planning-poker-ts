@@ -7,9 +7,9 @@ import {
 } from "../../../reducers/game/gameSlice";
 import { resetVoted } from "../../../reducers/user/userSlice";
 import { RootState } from "../../../app/store";
-import "./Table.css";
 import ButtonOnTable from "../ButtonOnTable/ButtonOnTable";
 import LouderTable from "../../atoms/LouderTable/LouderTable";
+import "./Table.scss";
 
 interface TableProps {
   roles: string[];
@@ -39,7 +39,7 @@ const Table: React.FC<TableProps> = ({ roles }) => {
   };
 
   return (
-    <div className="table">
+    <div className="m-table">
       {loading && <LouderTable />}
 
       <ButtonOnTable

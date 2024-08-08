@@ -7,6 +7,10 @@ interface Card {
   value: number;
 }
 
+interface CardResult extends Card {
+  votes: number;
+}
+
 interface Player {
   id: string;
   name: string;
@@ -16,11 +20,17 @@ interface Player {
 
 interface GameState {
   gameName: string | undefined;
-  state: "no_started" | "started" | "ready_to_show_cards" | "revealed_cards";
+  state:
+    | "no_started"
+    | "started"
+    | "ready_to_show_cards"
+    | "revealed_cards"
+    | "finished";
+
   players: Player[];
   admins: string[];
   selectedCards: Card[];
-  results: { count: Card[]; avarage: number };
+  results: { count: CardResult[]; avarage: number };
   poolCards: Card[];
   allPoolCards: Record<string, Card[]>;
 }

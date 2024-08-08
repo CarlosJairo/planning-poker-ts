@@ -1,0 +1,29 @@
+.o-card-results {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 20%;
+  font-size: 0.8rem;
+
+  &__results {
+    position: relative;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+    scrollbar-width: none;
+    padding-right: 4rem;
+  }
+}
+
+@media (min-width: 479px) {
+  .o-card-results {
+    justify-content: center;
+
+    &__results {
+      overflow-x: visible;
+      padding-right: 0;
+    }
+  }
+}

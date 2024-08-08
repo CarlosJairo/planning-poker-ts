@@ -1,4 +1,5 @@
 import React from "react";
+import "./CardOnTable.scss";
 
 interface CardOnTableProps {
   voted: { id: string; str: string; value: number } | boolean;
@@ -10,9 +11,9 @@ const CardOnTable: React.FC<CardOnTableProps> = ({ voted, revealedCards }) => {
 
   return (
     <div
-      className={`card-on-table ${isVotedObject ? "selected" : ""} ${
-        revealedCards ? "show" : ""
-      }`}
+      className={`a-card-on-table ${
+        isVotedObject ? "a-card-on-table--selected" : ""
+      } ${revealedCards ? "a-card-on-table--show" : ""}`}
     >
       {revealedCards && isVotedObject && (voted as { str: string }).str}
     </div>
@@ -20,24 +21,3 @@ const CardOnTable: React.FC<CardOnTableProps> = ({ voted, revealedCards }) => {
 };
 
 export default CardOnTable;
-
-// import React from "react";
-
-// interface CardOnTableProps {
-//   voted: { id: string; str: string; value: number } | boolean;
-//   revealedCards: boolean;
-// }
-
-// const CardOnTable: React.FC<CardOnTableProps> = ({ voted, revealedCards }) => {
-//   return (
-//     <div
-//       className={`card-on-table ${voted && "selected"} ${
-//         revealedCards && "show"
-//       }`}
-//     >
-//       {revealedCards && voted.str}
-//     </div>
-//   );
-// };
-
-// export default CardOnTable;

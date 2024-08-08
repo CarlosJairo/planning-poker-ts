@@ -6,7 +6,7 @@ import UserLogo from "../../atoms/UserLogo/UserLogo";
 import Button from "../../atoms/Button/Button";
 import CardOnTable from "../../atoms/CardOnTable/CardOnTable";
 import { ReetWeet } from "../../atoms/Icons";
-import "./CurrentUserItem.css";
+import "./CurrentUserItem.scss";
 
 interface CurrentUser {
   id: string;
@@ -42,13 +42,13 @@ const CurrentUserItem: React.FC<CurrentUserItemProps> = ({ user }) => {
   };
 
   return (
-    <div className={`user-item`}>
+    <div className={`m-current-user`}>
       {isViwer ? (
         <UserLogo name={name} />
       ) : (
         <CardOnTable voted={voted} revealedCards={revealedCards} />
       )}
-      <p className={"user-item-name"}>
+      <p className={"m-current-user__name"}>
         {isOwner && (
           <Button onClick={changeRol}>
             <ReetWeet />

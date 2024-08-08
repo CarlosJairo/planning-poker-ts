@@ -1,5 +1,5 @@
 import React from "react";
-import "./Modal.css";
+import "./Modal.scss";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -9,10 +9,10 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ children, isOpen }) => {
   return (
     <article
-      className={`modal-overlay ${isOpen ? "is-active" : ""}`}
+      className={`o-modal ${isOpen ? "o-modal--is-active" : ""}`}
       role="dialog"
     >
-      <div className="modal-content">{children}</div>
+      <div className="o-modal__content">{children}</div>
     </article>
   );
 };

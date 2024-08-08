@@ -1,0 +1,46 @@
+.m-modal__header {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #6429cd;
+  font-size: 1rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.m-modal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 2rem 0 0;
+
+  input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #bb65ff;
+    border-radius: 1rem;
+    background-color: transparent;
+    color: white;
+    font-family: inherit;
+    outline: none;
+  }
+
+  &__copy-link {
+    padding: 0.5rem 1rem;
+    color: #000000;
+    background-color: #eeecec;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  &__copy-link:hover {
+    background-color: var(--white);
+  }
+}

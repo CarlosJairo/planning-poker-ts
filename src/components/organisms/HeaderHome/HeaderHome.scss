@@ -1,16 +1,19 @@
-.header-home {
+.o-header-home {
   justify-content: flex-start;
   padding: 3rem 1rem;
-}
 
-.header-home h2 {
-  font-size: clamp(1rem, 6vw, 1.5rem);
-}
+  h2 {
+    font-size: clamp(1rem, 6vw, 1.5rem);
+  }
 
-.logo-subtitulo-ctn {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  &__logo-subtitulo-ctn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  &__chip-poker {
+    width: clamp(2rem, 15vw, 5rem);
+  }
 }
 
 @media (min-width: 479px) {

@@ -1,10 +1,10 @@
 import { FichaPoker } from "../../atoms/Icons";
-import "./HeaderHome.css";
+import "./HeaderHome.scss";
 const HeaderHome: React.FC = () => {
   return (
-    <header className="header-home">
-      <div className="logo-subtitulo-ctn">
-        <FichaPoker className={"chip-poker"} />
+    <header className="o-header-home">
+      <div className="o-header-home__logo-subtitulo-ctn">
+        <FichaPoker className={"o-header-home__chip-poker"} />
         <h2>Crear partida</h2>
       </div>
     </header>

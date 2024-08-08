@@ -5,7 +5,7 @@ import { voteCard } from "../../../reducers/user/userSlice";
 import { RootState } from "../../../app/store";
 import Card from "../../atoms/Card/Card";
 import SelectPoolCards from "../../molecules/SelectPoolCards/SelectPoolCards";
-import "./SelectableCardContainer.css";
+import "./SelectableCardContainer.scss";
 
 interface CardType {
   id: string;
@@ -36,19 +36,22 @@ const SelectableCardContainer: React.FC<SelectableCardContainerProps> = ({
 
   return (
     <section
-      className={`selectable-card-container ${isViwer && "none"} `}
-      data-testid="selectable-card-container"
+      className={`o-selectable-cards ${isViwer && "o-selectable-cards--none"} `}
     >
-      <div className="title-and-select-ctn">
+      <div className="o-selectable-cards__title-select">
         <h6>Elige una carta 👇</h6>
         <SelectPoolCards />
       </div>
-      <div className={`${disabledCards && "disabled"} cards`}>
+      <div
+        className={`${
+          disabledCards && "o-selectable-cards__cards--disabled"
+        } o-selectable-cards__cards`}
+      >
         {poolCards.length > 0 ? (
           poolCards.map((card) => (
             <Card
               key={card.str}
-              className={"card"}
+              className={"a-card"}
               onClick={() => sendCard(card)}
               card={card}
             >

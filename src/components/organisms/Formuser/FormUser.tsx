@@ -8,8 +8,8 @@ import ButtonSubmit from "../../atoms/ButtonSubmit/ButtonSubmit";
 import InputRadio from "../../atoms/InputRadio/InputRadio";
 import { setCurrentUser } from "../../../reducers/user/userSlice";
 import { addPlayer, createGame } from "../../../reducers/game/gameSlice";
-import "./FormUser.css";
 import { RootState } from "../../../app/store";
+import "./FormUser.scss";
 
 interface UserFormValues {
   name: string;
@@ -74,8 +74,8 @@ const UserForm: React.FC<{
   };
 
   return (
-    <form className="user-form" onSubmit={handleSubmit}>
-      <div className="form-group">
+    <form className="o-user-form" onSubmit={handleSubmit}>
+      <div className="o-user-form__form-group">
         <Label htmlFor={"name"}>Tu nombre</Label>
         <input
           type="text"
@@ -85,9 +85,9 @@ const UserForm: React.FC<{
           onChange={handleChange}
         />
         {isError && messageError.name && (
-          <p className="error">{messageError.name}</p>
+          <p className="o-user-form__error">{messageError.name}</p>
         )}
-        <div className="roles-container">
+        <div className="o-user-form__roles-container">
           <InputRadio
             name="rol"
             value="player"
@@ -96,7 +96,7 @@ const UserForm: React.FC<{
           />
           <Label htmlFor={"player"}>
             Jugador
-            <span className="radio-button"></span>
+            <span className="o-user-form__radio-button"></span>
           </Label>
           <InputRadio
             name="rol"
@@ -106,7 +106,7 @@ const UserForm: React.FC<{
           />
           <Label htmlFor={"viewer"}>
             Espectador
-            <span className="radio-button"></span>
+            <span className="o-user-form__radio-button"></span>
           </Label>
         </div>
       </div>

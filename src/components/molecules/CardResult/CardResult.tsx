@@ -1,5 +1,6 @@
 import React from "react";
 import CardOnTable from "../../atoms/CardOnTable/CardOnTable";
+import "./CardResult.scss";
 
 interface Card {
   id: string;
@@ -14,7 +15,7 @@ interface CardResultProps {
 
 const CardResult: React.FC<CardResultProps> = ({ card }) => {
   return (
-    <div className="card-result">
+    <div className="m-card-result">
       <CardOnTable voted={card} revealedCards={true} />
       <p>
         {card.votes} voto{card.votes > 1 && "s"}

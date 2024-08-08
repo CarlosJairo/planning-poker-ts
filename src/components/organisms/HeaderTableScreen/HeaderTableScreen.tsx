@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { FichaPoker, UserPlus } from "../../atoms/Icons";
 import { RootState } from "../../../app/store";
 import UserLogo from "../../atoms/UserLogo/UserLogo";
-import "./HeaderTableScreen.css";
+import "./HeaderTableScreen.scss";
 
 interface HeaderTableScreenProps {
   toggleModalLink: () => void;
@@ -16,14 +16,14 @@ const HeaderTableScreen: React.FC<HeaderTableScreenProps> = ({
   const { name } = useSelector((state: RootState) => state.user);
 
   return (
-    <header className="header-table-screen">
-      <FichaPoker className={"chip-poker"} />
+    <header className="o-header-game">
+      <FichaPoker className="o-header-game__a-chip" />
       <h1>{gameName}</h1>
-      <div className="menu-table-screen">
+      <div className="o-header-game__menu">
         <UserLogo name={name} />
-        <button onClick={toggleModalLink} className="invite-players-btn">
-          <span className="invite-player-text">Invitar jugadores</span>{" "}
-          <UserPlus className={"user-plus"} />
+        <button onClick={toggleModalLink} className="o-header-game__invite">
+          <span className="o-header-game__invite-text">Invitar jugadores</span>
+          <UserPlus className="o-header-game__user-plus" />
         </button>
       </div>
     </header>
