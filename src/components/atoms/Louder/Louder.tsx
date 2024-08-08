@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Louder.css";
+import "./Louder.scss";
 
 const Louder = () => {
   const initialPositions = [

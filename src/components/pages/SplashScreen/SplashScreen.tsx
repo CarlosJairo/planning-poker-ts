@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FichaPoker, Logo } from "../../atoms/Icons";
 import "./SplashScreen.scss";
 
