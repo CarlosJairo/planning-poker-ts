@@ -5,7 +5,7 @@ import { useForm } from "../../../hooks/useForm";
 import Label from "../../atoms/Label/Label";
 import ButtonSubmit from "../../atoms/ButtonSubmit/ButtonSubmit";
 import InputRadio from "../../atoms/InputRadio/InputRadio";
-import { joinRoom } from "../../../services/socket";
+import { joinRoom, getCreatedRoomId } from "../../../services/socket";
 import "./FormUser.scss";
 
 interface UserFormValues {
@@ -46,7 +46,12 @@ const UserForm: React.FC<{
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     toggleModalUserForm();
-    joinRoom({ roomId: roomId ?? "", name, mode: rol });
+    joinRoom({
+      roomId: roomId ?? "",
+      name,
+      mode: rol,
+      isOwner: getCreatedRoomId() === roomId,
+    });
   };
 
   return (

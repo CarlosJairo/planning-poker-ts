@@ -13,6 +13,7 @@ jest.mock("../../../services/socket", () => ({
   changePool: jest.fn(),
   changeMode: jest.fn(),
   updateRoles: jest.fn(),
+  getCreatedRoomId: jest.fn(() => null),
   socket: { on: jest.fn(), emit: jest.fn(), connect: jest.fn() },
 }));
 
@@ -86,6 +87,7 @@ describe("UserForm", () => {
       roomId: "ABC123",
       name: "Carlos",
       mode: "viwer",
+      isOwner: false,
     });
   });
 });

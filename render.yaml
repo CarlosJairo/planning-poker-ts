@@ -1,0 +1,21 @@
+# Blueprint de despliegue para Render (plan gratuito)
+# Uso: conectar el repo en Render -> Blueprint -> render.yaml.
+# El servicio arranca con npm workspaces desde la raíz del monorepo,
+# así `packages/shared` se resuelve correctamente dentro de apps/api.
+services:
+  - type: web
+    name: planning-poker-api
+    runtime: node
+    plan: free
+    healthCheckPath: /api/health
+    buildCommand: npm install
+    startCommand: npm run start:api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Coma separada de orígenes permitidos (dominios de Vercel: app y previews).
+      # Ejemplo: https://planning-poker.vercel.app,https://*-planning-poker-git-*.vercel.app
+      # Si se deja vacío, se acepta cualquier origen.
+      - key: ALLOWED_ORIGINS
+        value: https://planning-poker.vercel.app,https://*.vercel.app
+      # Render inyecta PORT automáticamente (el server usa process.env.PORT || 3001).

@@ -5,17 +5,43 @@ import cors from "cors";
 import { Server } from "socket.io";
 import { registerRoomHandlers } from "./events";
 
-const resolveOrigins = (): string[] | boolean => {
-  if (process.env.ALLOWED_ORIGINS) {
-    return process.env.ALLOWED_ORIGINS.split(",");
+const buildCorsOrigin = ():
+  | boolean
+  | ((
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => void) => {
+  const list =
+    process.env.ALLOWED_ORIGINS?.split(",")
+      .map((entry) => entry.trim())
+      .filter(Boolean) ?? null;
+  if (!list) {
+    return true;
   }
-  return true;
+  return (origin, callback) => {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+    const allowed = list.some((pattern) => {
+      if (pattern === "*") return true;
+      if (pattern.includes("*.")) {
+        return origin.endsWith(pattern.slice(pattern.indexOf("*.") + 1));
+      }
+      return origin === pattern;
+    });
+    if (allowed) {
+      callback(null, true);
+    } else {
+      callback(new Error("Origin not allowed by CORS"));
+    }
+  };
 };
 
 /** Crea el server HTTP de Express (health + CORS). */
 export const createHttpServer = (): HttpServer => {
   const app = express();
-  app.use(cors({ origin: resolveOrigins() }));
+  app.use(cors({ origin: buildCorsOrigin() }));
   app.use(express.json());
 
   app.get("/api/health", (_req, res) => {
@@ -29,7 +55,7 @@ export const createHttpServer = (): HttpServer => {
 export const attachSocketIo = (server: HttpServer): Server => {
   const io = new Server(server, {
     cors: {
-      origin: resolveOrigins(),
+      origin: buildCorsOrigin(),
       methods: ["GET", "POST"],
     },
   });

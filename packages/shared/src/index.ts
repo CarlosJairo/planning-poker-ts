@@ -61,6 +61,8 @@ export interface JoinRoomPayload {
   roomId: string;
   name: string;
   mode: ViewMode;
+  /** Recupera el rol de administrador al reconectarse (solo si la sala no tiene dueño). */
+  isOwner?: boolean;
 }
 
 export interface ChooseCardPayload {

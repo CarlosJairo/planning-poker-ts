@@ -347,3 +347,259 @@ describe("Reset game (HU6)", () => {
     creator.disconnect();
   });
 });
+
+describe("Change mode (HU12)", () => {
+  test("toggling a player to viwer clears their vote", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+
+    const ackVote = await emit<AckResponse>(creator, "choose-card", {
+      cardId: "1",
+    });
+    expect(ackVote.ok).toBe(true);
+
+    const changed = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.players[0]?.roles.includes("viwer")
+    );
+    const ack = await emit<AckResponse>(creator, "change-mode");
+    expect(ack.ok).toBe(true);
+    const room = await changed;
+
+    expect(room.players[0].roles).toEqual(expect.arrayContaining(["viwer"]));
+    expect(room.players[0].voted).toBe(false);
+    expect(room.selectedCards).toHaveLength(0);
+
+    const reVote = await emit<AckResponse>(creator, "choose-card", { cardId: "1" });
+    expect(reVote.ok).toBe(false);
+
+    creator.disconnect();
+  });
+
+  test("toggling a viwer to player lets them vote", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const viewer = await joinPlayer(roomId, { name: "Espectador", mode: "viwer" });
+
+    const changed = waitForRoomState(
+      viewer,
+      roomId,
+      (r) => r.players.find((p) => p.id === viewer.id)?.roles.includes("player") === true
+    );
+    const ack = await emit<AckResponse>(viewer, "change-mode");
+    expect(ack.ok).toBe(true);
+    await changed;
+
+    const vote = await emit<AckResponse>(viewer, "choose-card", { cardId: "4" });
+    expect(vote.ok).toBe(true);
+
+    viewer.disconnect();
+    creator.disconnect();
+  });
+});
+
+describe("Update roles / co-admin (HU13)", () => {
+  test("the owner can promote another player and they keep owner on reveal", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    const promoted = waitForRoomState(
+      creator,
+      roomId,
+      (r) =>
+        r.players.find((p) => p.id === player2.id)?.roles.includes("owner") === true
+    );
+    const ack = await emit<AckResponse>(creator, "update-roles", {
+      targetSocketId: player2.id,
+    });
+    expect(ack.ok).toBe(true);
+    const room = await promoted;
+
+    expect(room.ownerIds).toContain(player2.id);
+
+    const ready = waitForRoomState(
+      player2,
+      roomId,
+      (r) => r.state === "ready_to_show_cards"
+    );
+    await emit<AckResponse>(creator, "choose-card", { cardId: "1" });
+    await emit<AckResponse>(player2, "choose-card", { cardId: "3" });
+    await ready;
+
+    const revealed = waitForRoomState(
+      player2,
+      roomId,
+      (r) => r.state === "revealed_cards"
+    );
+    const reveal = await emit<AckResponse>(player2, "reveal-cards");
+    expect(reveal.ok).toBe(true);
+    await revealed;
+
+    const reset = await emit<AckResponse>(player2, "reset-game");
+    expect(reset.ok).toBe(true);
+
+    player2.disconnect();
+    creator.disconnect();
+  });
+
+  test("a non-owner cannot promote anyone", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+    const player3 = await joinPlayer(roomId, { name: "PlayerThree", mode: "player" });
+
+    const ack = await emit<AckResponse>(player2, "update-roles", {
+      targetSocketId: player3.id,
+    });
+    expect(ack.ok).toBe(false);
+    expect(ack.error).toMatch(/administrador/i);
+
+    player3.disconnect();
+    player2.disconnect();
+    creator.disconnect();
+  });
+});
+
+describe("Change pool (HU14)", () => {
+  test("the owner can change the pool, resetting votes and cards", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    await emit<AckResponse>(creator, "choose-card", { cardId: "1" });
+    await emit<AckResponse>(player2, "choose-card", { cardId: "4" });
+
+    const changed = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.poolKey === "powersOfTwo"
+    );
+    const ack = await emit<AckResponse>(creator, "change-pool", {
+      poolKey: "powersOfTwo",
+    });
+    expect(ack.ok).toBe(true);
+    const room = await changed;
+
+    expect(room.poolCards).toHaveLength(10);
+    expect(room.selectedCards).toHaveLength(0);
+    expect(room.players.every((p) => p.voted === false)).toBe(true);
+
+    const vote = await emit<AckResponse>(creator, "choose-card", { cardId: "5" });
+    expect(vote.ok).toBe(true);
+
+    player2.disconnect();
+    creator.disconnect();
+  });
+
+  test("change-pool is rejected for a non-owner, an invalid key and when revealed", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    const asPlayer = await emit<AckResponse>(player2, "change-pool", {
+      poolKey: "fibonacci",
+    });
+    expect(asPlayer.ok).toBe(false);
+
+    const invalid = await emit<AckResponse>(creator, "change-pool", {
+      poolKey: "nope",
+    });
+    expect(invalid.ok).toBe(false);
+
+    const ready = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.state === "ready_to_show_cards"
+    );
+    await emit<AckResponse>(creator, "choose-card", { cardId: "1" });
+    await emit<AckResponse>(player2, "choose-card", { cardId: "2" });
+    await ready;
+
+    const revealed = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.state === "revealed_cards"
+    );
+    await emit<AckResponse>(creator, "reveal-cards");
+    await revealed;
+
+    const afterReveal = await emit<AckResponse>(creator, "change-pool", {
+      poolKey: "fibonacci",
+    });
+    expect(afterReveal.ok).toBe(false);
+    expect(afterReveal.error).toMatch(/reinicia/i);
+
+    player2.disconnect();
+    creator.disconnect();
+  });
+});
+
+describe("CORS origins (Vercel deploy)", () => {
+  test("allows exact and wildcard subdomains, and denies others", async () => {
+    process.env.ALLOWED_ORIGINS =
+      "https://planning-poker.vercel.app,https://*.vercel.app";
+    const app = createApp();
+    await new Promise<void>((resolve) =>
+      app.server.listen(0, "127.0.0.1", resolve)
+    );
+    const { port } = app.server.address() as AddressInfo;
+    const url = `http://127.0.0.1:${port}/api/health`;
+
+    const exact = await fetch(url, {
+      headers: { Origin: "https://planning-poker.vercel.app" },
+    });
+    expect(exact.headers.get("access-control-allow-origin")).toBe(
+      "https://planning-poker.vercel.app"
+    );
+
+    const preview = await fetch(url, {
+      headers: { Origin: "https://planning-poker-git-main-abc123.vercel.app" },
+    });
+    expect(preview.headers.get("access-control-allow-origin")).toBe(
+      "https://planning-poker-git-main-abc123.vercel.app"
+    );
+
+    const denied = await fetch(url, {
+      headers: { Origin: "https://evil.example.com" },
+    });
+    expect(denied.headers.get("access-control-allow-origin")).toBeNull();
+
+    await new Promise<void>((resolve) => app.server.close(() => resolve()));
+    app.server.closeAllConnections();
+    delete process.env.ALLOWED_ORIGINS;
+  });
+});
+
+describe("Owner recovery on reconnection", () => {
+  test("the creator regains owner when rejoining after a refresh", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdmin", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    creator.disconnect();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const rejoined = await connect();
+    const rejoinedState = waitForRoomState(
+      rejoined,
+      roomId,
+      (r) => r.players.length === 2
+    );
+    const ack = await emit<AckResponse>(rejoined, "join-room", {
+      roomId,
+      name: "CarlosAdmin",
+      mode: "player",
+      isOwner: true,
+    });
+    expect(ack.ok).toBe(true);
+
+    const room = await rejoinedState;
+    expect(room.ownerIds).toContain(rejoined.id);
+    expect(room.ownerIds).not.toContain(player2.id);
+
+    player2.disconnect();
+    rejoined.disconnect();
+  });
+});

@@ -95,7 +95,10 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
       }
 
       const roles: Role[] = mode === "viwer" ? ["viwer"] : ["player"];
-      if (isCreator(room.id, socket.id) && !room.ownerIds.includes(socket.id)) {
+      const recoversOwner =
+        isCreator(room.id, socket.id) ||
+        (payload?.isOwner === true && room.ownerIds.length === 0);
+      if (recoversOwner && !room.ownerIds.includes(socket.id)) {
         roles.push("owner");
         room.ownerIds.push(socket.id);
       }
