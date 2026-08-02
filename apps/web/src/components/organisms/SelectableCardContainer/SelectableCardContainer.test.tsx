@@ -71,6 +71,43 @@ describe("SelectableCardContainer", () => {
     expect(chooseCard).toHaveBeenCalledWith("1");
   });
 
+  test("should disable the card pool after voting", () => {
+    const poolCards = [{ id: "1", str: "1", value: 1 }];
+
+    const { container } = render(
+      <Provider store={store}>
+        <SelectableCardContainer poolCards={poolCards} />
+      </Provider>
+    );
+
+    const cardsDiv = container.querySelector(".o-selectable-cards__cards");
+    expect(cardsDiv).not.toHaveClass("o-selectable-cards__cards--disabled");
+
+    fireEvent.click(screen.getByText(/1/i));
+    expect(cardsDiv).toHaveClass("o-selectable-cards__cards--disabled");
+  });
+
+  test("should hide the container for viewers", () => {
+    store = mockStore({
+      user: { rolCurrentUser: ["viwer"], voted: false },
+      game: {
+        allPoolCards: { fibonacci: [] },
+        poolKey: "fibonacci",
+        state: "started",
+        selectedCards: [],
+      },
+    });
+
+    const { container } = render(
+      <Provider store={store}>
+        <SelectableCardContainer poolCards={[]} />
+      </Provider>
+    );
+
+    const section = container.querySelector(".o-selectable-cards");
+    expect(section).toHaveClass("o-selectable-cards--none");
+  });
+
   test("should render 'No hay cartas' message when no cards are available", () => {
     render(
       <Provider store={store}>

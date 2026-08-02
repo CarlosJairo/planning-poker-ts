@@ -23,7 +23,11 @@ const Table: React.FC<TableProps> = ({ roles }) => {
 
   const showCards = () => {
     setLoading(true);
-    revealCards();
+    void revealCards().then((response) => {
+      if (!response.ok) {
+        setLoading(false);
+      }
+    });
   };
 
   const handleRestartGame = () => {
