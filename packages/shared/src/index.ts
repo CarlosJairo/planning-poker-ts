@@ -134,7 +134,7 @@ export type PoolKey = keyof typeof ALL_POOLS;
 const validMinMaxCharacters = (
   texto: string,
   min: number,
-  max: number
+  max: number,
 ): boolean => {
   return texto.length >= min && texto.length <= max;
 };
@@ -145,7 +145,7 @@ const validNoCharactersSpecials = (texto: string): boolean => {
 
 const maxLengtNumbersInCharacters = (
   texto: string,
-  maxNumber: number
+  maxNumber: number,
 ): boolean => {
   let cantNumber = 0;
   for (let i = 0; i < texto.length; i++) {
@@ -160,7 +160,6 @@ const noOnlyNumbersInCharacters = (texto: string): boolean => {
   return !/^([0-9])*$/.test(texto);
 };
 
-/** Nombre de la partida (HU1): 5-20 chars, sin especiales, máximo 2 números. */
 export const validateGameName = (texto: string): boolean => {
   return (
     validMinMaxCharacters(texto, 5, 20) &&
@@ -169,7 +168,6 @@ export const validateGameName = (texto: string): boolean => {
   );
 };
 
-/** Nombre de usuario (HU2/HU8): 5-20 chars, sin especiales, máximo 3 números, no solo números. */
 export const validateUserName = (texto: string): boolean => {
   return (
     validMinMaxCharacters(texto, 5, 20) &&
@@ -179,6 +177,5 @@ export const validateUserName = (texto: string): boolean => {
   );
 };
 
-/** Compatibilidad con el utilitario previo (reglas de usuario). */
 export const validInputCreatePartida = (texto: string): boolean =>
   validateUserName(texto);
