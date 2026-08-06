@@ -2,9 +2,6 @@
   "name": "planning-poker",
   "private": true,
   "version": "0.0.0",
-  "engines": {
-    "node": "22.x"
-  },
   "workspaces": [
     "apps/*",
     "packages/*"
