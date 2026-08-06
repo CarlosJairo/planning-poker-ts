@@ -24,7 +24,7 @@ const resolver = (values: CreateGameFormValues) => {
   if (values.name === "") return;
 
   if (!validateGameName(values.name)) {
-    errors.name = "4 a 20 caracteres, sin espacios.";
+    errors.name = "De 4 a 20 caracteres, sin espacios.";
   }
 
   if (Object.keys(errors).length > 0) {
