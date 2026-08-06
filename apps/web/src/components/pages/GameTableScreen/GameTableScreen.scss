@@ -6,4 +6,23 @@
   width: 100%;
   height: 100vh;
   padding: 0 1rem;
+
+  &--missing {
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+  }
+
+  &__missing-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  &__missing-subtitle {
+    margin: 0 0 0.6rem;
+    font-size: 0.9rem;
+    color: #cfcfcf;
+  }
 }

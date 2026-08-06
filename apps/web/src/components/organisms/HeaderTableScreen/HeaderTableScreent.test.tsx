@@ -6,16 +6,19 @@ import HeaderTableScreen from "./HeaderTableScreen";
 import { RootState } from "../../../app/store";
 import gameSlice from "../../../reducers/game/gameSlice";
 import userSlice from "../../../reducers/user/userSlice";
+import toastSlice from "../../../reducers/toast/toastSlice";
 
 // Mock store setup
 const store = configureStore({
   reducer: {
     game: gameSlice,
     user: userSlice,
+    toast: toastSlice,
   },
   preloadedState: {
     game: { gameName: "Test Game" },
     user: { name: "John Doe" },
+    toast: null,
   } as RootState,
 });
 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import SplashScreen from "./components/pages/SplashScreen/SplashScreen";
 import CreateGameScreen from "./components/pages/CreateGameScreen/CreateGameScreen";
 import GameTableScreen from "./components/pages/GameTableScreen/GameTableScreen";
+import Toast from "./components/molecules/Toast/Toast";
 
 function App() {
   const [showSplashScreen, setShowSplashScreen] = useState<boolean>(true);
@@ -26,6 +27,7 @@ function App() {
           />
           <Route path="/game/:roomId" element={<GameTableScreen />} />
         </Routes>
+        <Toast />
       </HashRouter>
     </>
   );

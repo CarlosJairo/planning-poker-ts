@@ -47,7 +47,7 @@ const UserItem: React.FC<UserItemProps> = ({ user }) => {
       )}
       <p className={"m-user-item__name"}>
         {isUserCurrentOwner && !isOwner && (
-          <Button onClick={addAdmin}>
+          <Button onClick={addAdmin} title="Fijar como admin">
             <UserPlus className="" />
           </Button>
         )}

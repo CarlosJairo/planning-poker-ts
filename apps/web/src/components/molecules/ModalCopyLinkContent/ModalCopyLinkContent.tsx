@@ -27,7 +27,7 @@ const ModalCopyLinkContent: React.FC<ModalCopyLinkContentProps> = ({
   const location = useLocation();
 
   useEffect(() => {
-    setUrl(window.location.origin + location.pathname);
+    setUrl(window.location.origin + window.location.pathname + "#" + location.pathname);
   }, [location.pathname]);
 
   const handleClick = async () => {

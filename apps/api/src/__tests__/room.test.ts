@@ -165,6 +165,22 @@ describe("Room creation and join (HU1, HU2, HU8)", () => {
     expect(ack.ok).toBe(false);
     socket.disconnect();
   });
+
+  test("room-exists reports existing and non-existing rooms", async () => {
+    const { roomId, creator } = await createRoom();
+    const exists = await emit<AckResponse>(creator, "room-exists", {
+      roomId,
+    });
+    expect(exists.ok).toBe(true);
+    expect(exists.exists).toBe(true);
+
+    const missing = await emit<AckResponse>(creator, "room-exists", {
+      roomId: "NOPE99",
+    });
+    expect(missing.exists).toBe(false);
+
+    creator.disconnect();
+  });
 });
 
 describe("Choose card (HU4, HU10)", () => {

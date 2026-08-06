@@ -24,7 +24,7 @@ const resolver = (values: CreateGameFormValues) => {
   if (values.name === "") return;
 
   if (!validateGameName(values.name)) {
-    errors.name = "Nombre no válido";
+    errors.name = "Mín. 4 caracteres, sin espacios.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -73,8 +73,8 @@ const CreateGameForm: React.FC = () => {
         {isError && messageError.name
           ? messageError.name
           : serverError
-          ? serverError
-          : " "}
+            ? serverError
+            : " "}
       </p>
 
       <ButtonSubmit

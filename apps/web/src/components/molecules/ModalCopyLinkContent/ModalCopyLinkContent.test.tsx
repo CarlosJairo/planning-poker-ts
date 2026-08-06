@@ -1,4 +1,25 @@
-import { copyToClipboard } from "./ModalCopyLinkContent";
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
+import ModalCopyLinkContent, {
+  copyToClipboard,
+} from "./ModalCopyLinkContent";
+import "@testing-library/jest-dom";
+
+describe("ModalCopyLinkContent", () => {
+  test("construye el link de invitación conservando el hash de la ruta", () => {
+    render(
+      <MemoryRouter initialEntries={["/game/ABC123"]}>
+        <Routes>
+          <Route path="/game/:roomId" element={<ModalCopyLinkContent toggleModalLink={() => {}} />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const input = screen.getByRole("textbox") as HTMLInputElement;
+    expect(input.value).toBe("http://localhost/#/game/ABC123");
+  });
+});
+
 describe("copyToClipboard function", () => {
   // Mock para console.error para evitar errores en la consola
   beforeAll(() => {

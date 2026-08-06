@@ -6,6 +6,7 @@ import {
   clearCurrentUser,
   setCurrentUserFromRoom,
 } from "../reducers/user/userSlice";
+import { showToast } from "../reducers/toast/toastSlice";
 import type {
   AckResponse,
   ChangePoolPayload,
@@ -72,6 +73,9 @@ export const createRoom = async (name: string): Promise<AckResponse> => {
   return response;
 };
 
+export const roomExists = (roomId: string): Promise<AckResponse> =>
+  emitWithAck("room-exists", { roomId });
+
 export const joinRoom = async (
   payload: JoinRoomPayload
 ): Promise<AckResponse> => {
@@ -111,6 +115,27 @@ socket.on("room-state", (room: Room) => {
   store.dispatch(setRoomState(room));
   const me = room.players.find((player) => player.id === socket.id);
   if (me) {
+    const previous = store.getState().user;
+
+    if (previous.id === socket.id) {
+      const wasOwner = previous.rolCurrentUser.includes("owner");
+      const isOwner = me.roles.includes("owner");
+      const wasViwer = previous.rolCurrentUser.includes("viwer");
+      const isViwer = me.roles.includes("viwer");
+
+      if (!wasOwner && isOwner) {
+        store.dispatch(showToast({ message: "Te fijaron como administrador" }));
+      }
+      if (wasViwer !== isViwer) {
+        store.dispatch(
+          showToast({
+            message: isViwer ? "Cambiaste a espectador" : "Ahora eres jugador",
+            variant: "info",
+          })
+        );
+      }
+    }
+
     store.dispatch(
       setCurrentUserFromRoom({
         id: me.id,

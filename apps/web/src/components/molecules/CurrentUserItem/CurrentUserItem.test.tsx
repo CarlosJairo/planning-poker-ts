@@ -24,6 +24,10 @@ describe("CurrentUserItem", () => {
       "m-current-user"
     );
     expect(screen.getByText("John Doe").previousSibling).toBeInTheDocument();
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "title",
+      "Cambiar a jugador"
+    );
   });
 
   test("should render the button when user is an owner", () => {
@@ -36,6 +40,7 @@ describe("CurrentUserItem", () => {
     const button = screen.getByRole("button");
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent("");
+    expect(button).toHaveAttribute("title", "Cambiar a espectador");
     expect(button.querySelector("svg")).toBeInTheDocument(); // Verifica que el icono está presente
   });
 });

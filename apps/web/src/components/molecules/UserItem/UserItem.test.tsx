@@ -47,6 +47,7 @@ describe("UserItem", () => {
 
     const button = screen.getByRole("button");
     expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute("title", "Fijar como admin");
     expect(button.querySelector("svg")).toBeInTheDocument();
     expect(screen.getByText("Alice Doe")).toBeInTheDocument();
   });

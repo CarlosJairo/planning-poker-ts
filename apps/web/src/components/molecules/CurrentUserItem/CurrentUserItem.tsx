@@ -44,7 +44,10 @@ const CurrentUserItem: React.FC<CurrentUserItemProps> = ({ user }) => {
         <CardOnTable voted={voted} revealedCards={revealedCards} />
       )}
       <p className={"m-current-user__name"}>
-        <Button onClick={changeRol}>
+        <Button
+          onClick={changeRol}
+          title={isViwer ? "Cambiar a jugador" : "Cambiar a espectador"}
+        >
           <ReetWeet />
         </Button>
         {name}

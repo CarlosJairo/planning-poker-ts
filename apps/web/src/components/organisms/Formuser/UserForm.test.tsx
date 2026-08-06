@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 
 jest.mock("../../../services/socket", () => ({
   createRoom: jest.fn(),
-  joinRoom: jest.fn(),
+  joinRoom: jest.fn().mockResolvedValue({ ok: true }),
   chooseCard: jest.fn(),
   revealCards: jest.fn(),
   resetGame: jest.fn(),
@@ -89,5 +89,81 @@ describe("UserForm", () => {
       mode: "viwer",
       isOwner: false,
     });
+  });
+
+  test("reserva el espacio del error aunque no haya error (sin salto de botón)", () => {
+    render(
+      <MemoryRouter initialEntries={["/game/ABC123"]}>
+        <UserForm toggleModalUserForm={() => {}} />
+      </MemoryRouter>
+    );
+
+    const error = document.querySelector(".o-user-form__error");
+    expect(error).toBeInTheDocument();
+    expect(error?.textContent?.trim()).toBe("");
+  });
+
+  test("muestra el error del servidor cuando el join falla", async () => {
+    (joinRoom as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      error: "Nombre inválido",
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/game/ABC123"]}>
+        <Routes>
+          <Route
+            path="/game/:roomId"
+            element={<UserForm toggleModalUserForm={() => {}} />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const input = screen.getByLabelText(/Tu nombre/i) as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "Carlos" } });
+    });
+
+    await act(async () => {
+      fireEvent.submit(screen.getByRole("button", { name: /Continuar/i }));
+    });
+
+    expect(screen.getByText("Nombre inválido")).toBeInTheDocument();
+  });
+
+  test("avisa al padre cuando la sala no existe", async () => {
+    const onRoomMissing = jest.fn();
+    (joinRoom as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      error: "La sala no existe",
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/game/NOPE99"]}>
+        <Routes>
+          <Route
+            path="/game/:roomId"
+            element={
+              <UserForm
+                toggleModalUserForm={() => {}}
+                onRoomMissing={onRoomMissing}
+              />
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const input = screen.getByLabelText(/Tu nombre/i) as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "Carlos" } });
+    });
+
+    await act(async () => {
+      fireEvent.submit(screen.getByRole("button", { name: /Continuar/i }));
+    });
+
+    expect(onRoomMissing).toHaveBeenCalled();
   });
 });

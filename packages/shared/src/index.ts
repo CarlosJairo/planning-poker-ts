@@ -51,6 +51,8 @@ export interface AckResponse {
   roomId?: string;
   name?: string;
   error?: string;
+  /** Presente en room-exists: true si la sala existe. */
+  exists?: boolean;
 }
 
 export interface CreateRoomPayload {

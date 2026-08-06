@@ -72,6 +72,13 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
   );
 
   socket.on(
+    "room-exists",
+    (payload: { roomId?: string } | undefined, ack?: (response: AckResponse) => void) => {
+      ack?.({ ok: true, exists: Boolean(getRoom(payload?.roomId)) });
+    }
+  );
+
+  socket.on(
     "join-room",
     (payload: JoinRoomPayload | undefined, ack?: (response: AckResponse) => void) => {
       const room = getRoom(payload?.roomId);

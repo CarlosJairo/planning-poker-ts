@@ -6,6 +6,7 @@ import Label from "../../atoms/Label/Label";
 import ButtonSubmit from "../../atoms/ButtonSubmit/ButtonSubmit";
 import InputRadio from "../../atoms/InputRadio/InputRadio";
 import { joinRoom, getCreatedRoomId } from "../../../services/socket";
+import type { AckResponse } from "@planning-poker/shared";
 import "./FormUser.scss";
 
 interface UserFormValues {
@@ -21,7 +22,7 @@ const resolver = (values: UserFormValues) => {
   if (values.name == "") return;
 
   if (!validateUserName(values.name)) {
-    errors.name = "Invalid name";
+    errors.name = "Mín. 4 caracteres, sin espacios.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -33,7 +34,8 @@ const resolver = (values: UserFormValues) => {
 
 const UserForm: React.FC<{
   toggleModalUserForm: () => void;
-}> = ({ toggleModalUserForm }) => {
+  onRoomMissing?: () => void;
+}> = ({ toggleModalUserForm, onRoomMissing }) => {
   const { formValue, handleChange, messageError, isError } = useForm({
     defaultValues: { name: "" },
     resolver,
@@ -42,16 +44,30 @@ const UserForm: React.FC<{
   const { name } = formValue;
   const { roomId } = useParams();
   const [rol, setRol] = useState<"player" | "viwer">("player");
+  const [serverError, setServerError] = useState<string>("");
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    toggleModalUserForm();
-    joinRoom({
+    setServerError("");
+
+    const response: AckResponse = await joinRoom({
       roomId: roomId ?? "",
       name,
       mode: rol,
       isOwner: getCreatedRoomId() === roomId,
     });
+
+    if (response.ok) {
+      toggleModalUserForm();
+      return;
+    }
+
+    if (response.error && /no existe/i.test(response.error)) {
+      onRoomMissing?.();
+      return;
+    }
+
+    setServerError(response.error ?? "No se pudo unir a la partida");
   };
 
   return (
@@ -65,9 +81,13 @@ const UserForm: React.FC<{
           value={formValue.name}
           onChange={handleChange}
         />
-        {isError && messageError.name && (
-          <p className="o-user-form__error">{messageError.name}</p>
-        )}
+        <p className="o-user-form__error">
+          {isError && messageError.name
+            ? messageError.name
+            : serverError
+              ? serverError
+              : " "}
+        </p>
         <div className="o-user-form__roles-container">
           <InputRadio
             name="rol"

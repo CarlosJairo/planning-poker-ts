@@ -6,7 +6,7 @@
   margin: 0 auto;
   border-radius: 8px;
   font-size: 14px;
-
+  gap: 1rem;
   &__form-group {
     position: relative;
     width: 100%;
@@ -35,7 +35,7 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin-top: 0.6rem;
+    margin-top: 0.2rem;
 
     label {
       display: flex;
@@ -86,6 +86,16 @@
   button[disabled] {
     cursor: default;
     background-color: #9d9da1;
+  }
+
+  &__error {
+    line-height: 1;
+    min-height: 1.3em;
+    margin: 0.6rem 0 0;
+    color: #ff6b6b;
+    text-align: center;
+    font-size: 0.8rem;
+    overflow: hidden;
   }
 
   &__roles-container
