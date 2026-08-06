@@ -37,4 +37,60 @@ describe("TableAndPlayers", () => {
     const sectionElement = document.querySelector(".o-table-and-players");
     expect(sectionElement).toBeInTheDocument();
   });
+
+  test("sin overflow cuando hay 7 o menos jugadores", () => {
+    const players = Array.from({ length: 7 }, (_, i) => ({
+      id: `p${i}`,
+      name: `Player ${i}`,
+      voted: false,
+      roles: ["player"],
+    }));
+    const smallStore = mockStore({
+      game: { state: "started", players },
+      user: {
+        id: "me",
+        name: "Current",
+        voted: false,
+        rolCurrentUser: ["owner"],
+      },
+    });
+
+    render(
+      <Provider store={smallStore}>
+        <TableAndPlayers />
+      </Provider>
+    );
+
+    expect(document.querySelector(".overflow-players")).toBeNull();
+    expect(document.querySelectorAll(".m-user-item")).toHaveLength(7);
+  });
+
+  test("renderiza la franja de overflow cuando hay más de 7 jugadores", () => {
+    const players = Array.from({ length: 9 }, (_, i) => ({
+      id: `p${i}`,
+      name: `Player ${i}`,
+      voted: false,
+      roles: ["player"],
+    }));
+    const bigStore = mockStore({
+      game: { state: "started", players },
+      user: {
+        id: "me",
+        name: "Current",
+        voted: false,
+        rolCurrentUser: ["owner"],
+      },
+    });
+
+    render(
+      <Provider store={bigStore}>
+        <TableAndPlayers />
+      </Provider>
+    );
+
+    const overflow = document.querySelector(".overflow-players");
+    expect(overflow).toBeInTheDocument();
+    expect(overflow?.querySelectorAll(".m-user-item")).toHaveLength(2);
+    expect(document.querySelectorAll(".m-user-item")).toHaveLength(9);
+  });
 });

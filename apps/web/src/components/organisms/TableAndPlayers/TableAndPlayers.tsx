@@ -36,7 +36,10 @@ const TableAndPlayers: React.FC = () => {
   const filteredPlayers = filterPlayers(players, currentUser);
 
   return (
-    <section className="o-table-and-players" data-testid="table-and-players">
+    <section
+      className="o-table-and-players"
+      data-testid="table-and-players"
+    >
       <Locker className={"currentUser user-item"}>
         <CurrentUserItem user={currentUser} />
       </Locker>
@@ -46,11 +49,19 @@ const TableAndPlayers: React.FC = () => {
       </Locker>
 
       {filteredPlayers &&
-        filteredPlayers.map((user, index) => (
+        filteredPlayers.slice(0, 7).map((user, index) => (
           <Locker className={`user${index}`} key={index}>
             <UserItem user={user} key={user.id} />
           </Locker>
         ))}
+
+      {filteredPlayers && filteredPlayers.length > 7 && (
+        <Locker className="overflow-players">
+          {filteredPlayers.slice(7).map((user) => (
+            <UserItem user={user} key={user.id} />
+          ))}
+        </Locker>
+      )}
     </section>
   );
 };
