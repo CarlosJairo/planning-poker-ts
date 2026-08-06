@@ -3,7 +3,7 @@ import type { Server as HttpServer } from "http";
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
-import { registerRoomHandlers } from "./events";
+import { registerRoomHandlers } from "./socket/register-events";
 
 const buildCorsOrigin = ():
   | boolean
