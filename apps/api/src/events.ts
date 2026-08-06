@@ -61,7 +61,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
         ack?.({
           ok: false,
           error:
-            "El nombre debe tener entre 5 y 20 caracteres, sin caracteres especiales y máximo 2 números.",
+            "El nombre debe tener entre 5 y 20 caracteres, sin caracteres especiales.",
         });
         return;
       }

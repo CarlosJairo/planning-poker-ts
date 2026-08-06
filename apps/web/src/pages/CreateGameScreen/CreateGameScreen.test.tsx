@@ -10,10 +10,10 @@ const mockStore = configureMockStore();
 const store = mockStore({});
 
 // Mock de HeaderHome y CreateGameForm
-jest.mock("../../organisms/HeaderHome/HeaderHome", () => () => (
+jest.mock("../../components/organisms/HeaderHome/HeaderHome", () => () => (
   <div>HeaderHome Mock</div>
 ));
-jest.mock("../../organisms/CreateGameForm/CreateGameForm", () => () => (
+jest.mock("../../components/organisms/CreateGameForm/CreateGameForm", () => () => (
   <div>CreateGameForm Mock</div>
 ));
 

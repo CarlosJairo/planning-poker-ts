@@ -22,7 +22,7 @@ const resolver = (values: UserFormValues) => {
   if (values.name == "") return;
 
   if (!validateUserName(values.name)) {
-    errors.name = "Mín. 4 caracteres, sin espacios.";
+    errors.name = "Mín. 5 y máx. 10 caracteres, sin espacios.";
   }
 
   if (Object.keys(errors).length > 0) {

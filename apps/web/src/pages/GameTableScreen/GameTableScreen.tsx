@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Modal from "../../organisms/Modal/Modal";
-import useModal from "../../../hooks/useModal";
-import UserForm from "../../organisms/Formuser/FormUser";
-import HeaderTableScreen from "../../organisms/HeaderTableScreen/HeaderTableScreen";
-import ModalCopyLinkContent from "../../molecules/ModalCopyLinkContent/ModalCopyLinkContent";
-import TableAndPlayers from "../../organisms/TableAndPlayers/TableAndPlayers";
+import Modal from "../../components/organisms/Modal/Modal";
+import useModal from "../../hooks/useModal";
+import UserForm from "../../components/organisms/Formuser/FormUser";
+import HeaderTableScreen from "../../components/organisms/HeaderTableScreen/HeaderTableScreen";
+import ModalCopyLinkContent from "../../components/molecules/ModalCopyLinkContent/ModalCopyLinkContent";
+import TableAndPlayers from "../../components/organisms/TableAndPlayers/TableAndPlayers";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
-import SelectableCardContainer from "../../organisms/SelectableCardContainer/SelectableCardContainer";
-import CardResultsCtn from "../../organisms/CardResultsCtn/CardResultsCtn";
-import Button from "../../atoms/Button/Button";
+import { RootState } from "../../app/store";
+import SelectableCardContainer from "../../components/organisms/SelectableCardContainer/SelectableCardContainer";
+import CardResultsCtn from "../../components/organisms/CardResultsCtn/CardResultsCtn";
+import Button from "../../components/atoms/Button/Button";
 import {
   getJoin,
   joinRoom,
   clearJoin,
   roomExists,
-} from "../../../services/socket";
+} from "../../services/socket";
 import "./GameTableScreen.scss";
 
 type RoomStatus = "checking" | "exists" | "missing";
@@ -74,7 +74,12 @@ const GameTableScreen: React.FC = () => {
         <p className="game-table-screen__missing-subtitle">
           El enlace puede ser incorrecto o la sala ya fue eliminada.
         </p>
-        <Button onClick={handleCreateGame}>Crear partida</Button>
+        <Button
+          className="game-table-screen__create-button"
+          onClick={handleCreateGame}
+        >
+          Crear partida
+        </Button>
       </section>
     );
   }

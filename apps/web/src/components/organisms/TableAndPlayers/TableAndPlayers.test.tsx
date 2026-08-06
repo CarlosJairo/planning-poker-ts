@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import TableAndPlayers from "./TableAndPlayers";
@@ -92,5 +92,55 @@ describe("TableAndPlayers", () => {
     expect(overflow).toBeInTheDocument();
     expect(overflow?.querySelectorAll(".m-user-item")).toHaveLength(2);
     expect(document.querySelectorAll(".m-user-item")).toHaveLength(9);
+  });
+
+  test("al cambiar a espectador, los demás ven su logo en lugar de su carta", () => {
+    const playerStore = mockStore({
+      game: {
+        state: "started",
+        players: [{ id: "1", name: "Sara", voted: false, roles: ["player"] }],
+      },
+      user: {
+        id: "me",
+        name: "Current",
+        voted: false,
+        rolCurrentUser: ["owner"],
+      },
+    });
+
+    const { rerender } = render(
+      <Provider store={playerStore}>
+        <TableAndPlayers />
+      </Provider>
+    );
+
+    expect(
+      screen.getByText("Sara").closest(".m-user-item")?.querySelector(
+        "[data-testid='card-on-table']"
+      )
+    ).toBeInTheDocument();
+
+    const viewerStore = mockStore({
+      game: {
+        state: "started",
+        players: [{ id: "1", name: "Sara", voted: false, roles: ["viwer"] }],
+      },
+      user: {
+        id: "me",
+        name: "Current",
+        voted: false,
+        rolCurrentUser: ["owner"],
+      },
+    });
+
+    rerender(
+      <Provider store={viewerStore}>
+        <TableAndPlayers />
+      </Provider>
+    );
+
+    const userItem = screen.getByText("Sara").closest(".m-user-item");
+    expect(userItem?.querySelector("[data-testid='card-on-table']")).toBeNull();
+    expect(userItem?.querySelector(".a-user-logo")?.textContent).toBe("S");
   });
 });

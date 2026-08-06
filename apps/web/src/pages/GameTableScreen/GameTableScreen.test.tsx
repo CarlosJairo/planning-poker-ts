@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import { MemoryRouter } from "react-router-dom";
 import GameTableScreen from "./GameTableScreen";
-import { getJoin, clearJoin, roomExists } from "../../../services/socket";
+import { getJoin, clearJoin, roomExists } from "../../services/socket";
 import "@testing-library/jest-dom";
 
 const mockNavigate = jest.fn();
@@ -14,7 +14,7 @@ jest.mock("react-router-dom", () => ({
 }));
 
 const mockJoinRoom = jest.fn();
-jest.mock("../../../services/socket", () => ({
+jest.mock("../../services/socket", () => ({
   getJoin: jest.fn(() => null),
   clearJoin: jest.fn(),
   roomExists: jest.fn().mockResolvedValue({ ok: true, exists: true }),
@@ -54,7 +54,7 @@ const store = mockStore({
 
 // Mocks para useModal
 const mockToggleModalUserForm = jest.fn();
-jest.mock("../../../hooks/useModal", () => () => [
+jest.mock("../../hooks/useModal", () => () => [
   false,
   mockToggleModalUserForm,
 ]);

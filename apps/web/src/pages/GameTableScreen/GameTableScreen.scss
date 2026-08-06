@@ -25,4 +25,19 @@
     font-size: 0.9rem;
     color: #cfcfcf;
   }
+
+  &__create-button {
+    color: #330072;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.5rem 1.6rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s linear;
+  }
+
+  &__create-button:hover {
+    box-shadow: 0 0 1rem rgba(255, 255, 255, 0.6);
+  }
 }

@@ -1,8 +1,8 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import SplashScreen from "./components/pages/SplashScreen/SplashScreen";
-import CreateGameScreen from "./components/pages/CreateGameScreen/CreateGameScreen";
-import GameTableScreen from "./components/pages/GameTableScreen/GameTableScreen";
+import SplashScreen from "./pages/SplashScreen/SplashScreen";
+import CreateGameScreen from "./pages/CreateGameScreen/CreateGameScreen";
+import GameTableScreen from "./pages/GameTableScreen/GameTableScreen";
 import Toast from "./components/molecules/Toast/Toast";
 
 function App() {

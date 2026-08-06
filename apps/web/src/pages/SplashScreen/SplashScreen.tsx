@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FichaPoker, Logo } from "../../atoms/Icons";
+import { FichaPoker, Logo } from "../../components/atoms/Icons";
 import "./SplashScreen.scss";
 
 interface SplashScreenProps {

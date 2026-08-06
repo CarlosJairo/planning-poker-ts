@@ -145,19 +145,6 @@ const validNoCharactersSpecials = (texto: string): boolean => {
   return texto.match(/\W/) === null;
 };
 
-const maxLengtNumbersInCharacters = (
-  texto: string,
-  maxNumber: number,
-): boolean => {
-  let cantNumber = 0;
-  for (let i = 0; i < texto.length; i++) {
-    if (Number.isInteger(parseInt(texto.charAt(i)))) {
-      cantNumber++;
-    }
-  }
-  return cantNumber <= maxNumber;
-};
-
 const noOnlyNumbersInCharacters = (texto: string): boolean => {
   return !/^([0-9])*$/.test(texto);
 };
@@ -165,16 +152,14 @@ const noOnlyNumbersInCharacters = (texto: string): boolean => {
 export const validateGameName = (texto: string): boolean => {
   return (
     validMinMaxCharacters(texto, 5, 20) &&
-    validNoCharactersSpecials(texto) &&
-    maxLengtNumbersInCharacters(texto, 2)
+    validNoCharactersSpecials(texto)
   );
 };
 
 export const validateUserName = (texto: string): boolean => {
   return (
-    validMinMaxCharacters(texto, 5, 20) &&
+    validMinMaxCharacters(texto, 5, 10) &&
     validNoCharactersSpecials(texto) &&
-    maxLengtNumbersInCharacters(texto, 3) &&
     noOnlyNumbersInCharacters(texto)
   );
 };
