@@ -12,13 +12,19 @@ import type {
   UpdateRolesPayload,
 } from "@planning-poker/shared";
 import {
+  cancelOwnerTransfer,
   createRoom,
   deleteRoom,
   getRoom,
   getRoomBySocketId,
   isCreator,
   registerCreator,
+  scheduleOwnerTransfer,
 } from "./rooms";
+
+/** Tiempo que se espera a que el owner vuelva a reconectar antes de transferir el admin. */
+const ownerTransferGraceMs = (): number =>
+  Number(process.env.OWNER_TRANSFER_GRACE_MS ?? 10_000);
 
 const broadcast = (io: Server, room: Room): void => {
   io.to(room.id).emit("room-state", room);
@@ -106,6 +112,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
         isCreator(room.id, socket.id) ||
         (payload?.isOwner === true && room.ownerIds.length === 0);
       if (recoversOwner && !room.ownerIds.includes(socket.id)) {
+        cancelOwnerTransfer(room.id);
         roles.push("owner");
         room.ownerIds.push(socket.id);
       }
@@ -258,7 +265,11 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
         return;
       }
       const wasViwer = player.roles.includes("viwer");
+      const hadOwner = player.roles.includes("owner");
       player.roles = wasViwer ? ["player"] : ["viwer"];
+      if (hadOwner) {
+        player.roles.push("owner");
+      }
       if (!wasViwer) {
         player.voted = false;
         recomputeSelectedCards(room);
@@ -296,12 +307,31 @@ export const registerRoomHandlers = (io: Server, socket: Socket): void => {
   socket.on("disconnect", () => {
     const room = getRoomBySocketId(socket.id);
     if (!room) return;
+    const wasOwner = room.ownerIds.includes(socket.id);
     room.players = room.players.filter((player) => player.id !== socket.id);
     room.ownerIds = room.ownerIds.filter((id) => id !== socket.id);
 
     if (room.players.length === 0) {
       deleteRoom(room.id);
       return;
+    }
+
+    if (wasOwner && room.ownerIds.length === 0) {
+      scheduleOwnerTransfer(
+        room.id,
+        () => {
+          const pending = getRoom(room.id);
+          if (!pending) return;
+          if (pending.ownerIds.length > 0) return;
+          const newOwner =
+            pending.players.find((player) => player.roles.includes("player")) ??
+            pending.players[0];
+          newOwner.roles.push("owner");
+          pending.ownerIds.push(newOwner.id);
+          broadcast(io, pending);
+        },
+        ownerTransferGraceMs()
+      );
     }
     recomputeSelectedCards(room);
     syncState(room);

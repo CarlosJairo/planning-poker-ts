@@ -11,6 +11,7 @@ const randomId = (length: number): string =>
 
 const rooms = new Map<string, Room>();
 const creators = new Map<string, string>();
+const ownerTransferTimers = new Map<string, NodeJS.Timeout>();
 
 export const createRoom = (name: string): Room => {
   const id = randomId(6);
@@ -38,6 +39,7 @@ export const getRoomBySocketId = (socketId: string): Room | undefined =>
   );
 
 export const deleteRoom = (roomId: string): void => {
+  cancelOwnerTransfer(roomId);
   rooms.delete(roomId);
   creators.delete(roomId);
 };
@@ -48,3 +50,26 @@ export const registerCreator = (roomId: string, socketId: string): void => {
 
 export const isCreator = (roomId: string, socketId: string): boolean =>
   creators.get(roomId) === socketId;
+
+/** Programa la transferencia de admin para cuando el owner no vuelve a reconectar. */
+export const scheduleOwnerTransfer = (
+  roomId: string,
+  fn: () => void,
+  delayMs: number
+): void => {
+  if (ownerTransferTimers.has(roomId)) return;
+  const timer = setTimeout(() => {
+    ownerTransferTimers.delete(roomId);
+    fn();
+  }, delayMs);
+  ownerTransferTimers.set(roomId, timer);
+};
+
+export const cancelOwnerTransfer = (roomId: string): void => {
+  const timer = ownerTransferTimers.get(roomId);
+  if (timer) clearTimeout(timer);
+  ownerTransferTimers.delete(roomId);
+};
+
+export const hasPendingOwnerTransfer = (roomId: string): boolean =>
+  ownerTransferTimers.has(roomId);

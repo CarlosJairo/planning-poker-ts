@@ -11,6 +11,7 @@ let baseUrl: string;
 const clients: Socket[] = [];
 
 beforeAll(async () => {
+  process.env.OWNER_TRANSFER_GRACE_MS = "100";
   const app = createApp();
   server = app.server;
   ioServer = app.io;
@@ -436,6 +437,154 @@ describe("Change mode (HU12)", () => {
 
     toggler.disconnect();
     creator.disconnect();
+  });
+
+  test("owner keeps owner role when toggling to viwer and can still reveal", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdm", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    const changed = waitForRoomState(
+      creator,
+      roomId,
+      (r) =>
+        r.players[0]?.roles.includes("viwer") === true &&
+        r.players[0]?.roles.includes("owner") === true
+    );
+    const ack = await emit<AckResponse>(creator, "change-mode");
+    expect(ack.ok).toBe(true);
+    const room = await changed;
+
+    expect(room.players[0].roles).toEqual(
+      expect.arrayContaining(["viwer", "owner"])
+    );
+    expect(room.players[0].voted).toBe(false);
+
+    const ready = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.state === "ready_to_show_cards"
+    );
+    await emit<AckResponse>(player2, "choose-card", { cardId: "3" });
+    await ready;
+
+    const reveal = await emit<AckResponse>(creator, "reveal-cards");
+    expect(reveal.ok).toBe(true);
+
+    player2.disconnect();
+    creator.disconnect();
+  });
+});
+
+describe("Owner transfer on disconnect", () => {
+  test("ownership transfers to another player when the owner leaves", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdm", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    const transferred = waitForRoomState(
+      player2,
+      roomId,
+      (r) =>
+        r.players.find((p) => p.id === player2.id)?.roles.includes("owner") ===
+        true
+    );
+    creator.disconnect();
+    const room = await transferred;
+
+    expect(room.ownerIds).toContain(player2.id);
+    expect(room.players.find((p) => p.id === player2.id)?.roles).toEqual(
+      expect.arrayContaining(["owner"])
+    );
+
+    player2.disconnect();
+  });
+
+  test("transfer prefers a player over a spectator", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdm", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+    const viewer3 = await joinPlayer(roomId, { name: "Espectador", mode: "viwer" });
+
+    const transferred = waitForRoomState(
+      player2,
+      roomId,
+      (r) =>
+        r.players.find((p) => p.id === player2.id)?.roles.includes("owner") ===
+        true
+    );
+    creator.disconnect();
+    const room = await transferred;
+
+    expect(room.ownerIds).toContain(player2.id);
+    expect(room.ownerIds).not.toContain(viewer3.id);
+    expect(room.players.find((p) => p.id === viewer3.id)?.roles).not.toEqual(
+      expect.arrayContaining(["owner"])
+    );
+
+    player2.disconnect();
+    viewer3.disconnect();
+  });
+
+  test("does not transfer when another owner remains", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdm", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+    const player3 = await joinPlayer(roomId, { name: "PlayerThr", mode: "player" });
+
+    const promoted = waitForRoomState(
+      creator,
+      roomId,
+      (r) =>
+        r.players.find((p) => p.id === player2.id)?.roles.includes("owner") ===
+        true
+    );
+    await emit<AckResponse>(creator, "update-roles", {
+      targetSocketId: player2.id,
+    });
+    await promoted;
+
+    const creatorId = creator.id;
+    const afterLeave = waitForRoomState(
+      player3,
+      roomId,
+      (r) => !r.players.some((p) => p.id === creatorId)
+    );
+    creator.disconnect();
+    const room = await afterLeave;
+
+    expect(room.ownerIds).toEqual([player2.id]);
+
+    player2.disconnect();
+    player3.disconnect();
+  });
+
+  test("an owner who is a spectator transfers ownership when leaving", async () => {
+    const { roomId, creator } = await createRoom();
+    await joinRoom(creator, roomId, { name: "CarlosAdm", mode: "player" });
+    const player2 = await joinPlayer(roomId, { name: "PlayerTwo", mode: "player" });
+
+    const changed = waitForRoomState(
+      creator,
+      roomId,
+      (r) => r.players[0]?.roles.includes("viwer") === true
+    );
+    await emit<AckResponse>(creator, "change-mode");
+    await changed;
+
+    const transferred = waitForRoomState(
+      player2,
+      roomId,
+      (r) =>
+        r.players.find((p) => p.id === player2.id)?.roles.includes("owner") ===
+        true
+    );
+    creator.disconnect();
+    const room = await transferred;
+
+    expect(room.ownerIds).toContain(player2.id);
+
+    player2.disconnect();
   });
 });
 

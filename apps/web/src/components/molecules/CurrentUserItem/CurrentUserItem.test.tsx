@@ -43,4 +43,23 @@ describe("CurrentUserItem", () => {
     expect(button).toHaveAttribute("title", "Cambiar a espectador");
     expect(button.querySelector("svg")).toBeInTheDocument(); // Verifica que el icono está presente
   });
+
+  test("owner spectator renders UserLogo and can toggle back to player", () => {
+    render(
+      <Provider store={store}>
+        <CurrentUserItem
+          user={{ ...user, rolCurrentUser: ["viwer", "owner"] }}
+        />
+      </Provider>
+    );
+
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
+    expect(screen.getByText("John Doe").closest("div")).toHaveClass(
+      "m-current-user"
+    );
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "title",
+      "Cambiar a jugador"
+    );
+  });
 });

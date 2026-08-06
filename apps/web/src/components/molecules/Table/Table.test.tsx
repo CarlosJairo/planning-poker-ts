@@ -69,4 +69,11 @@ describe("Table", () => {
     renderTable("ready_to_show_cards", ["player"]);
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
+
+  it("should render action buttons for an owner who is a spectator", () => {
+    renderTable("ready_to_show_cards", ["viwer", "owner"]);
+    expect(
+      screen.getByRole("button", { name: /revelar cartas/i })
+    ).toBeInTheDocument();
+  });
 });
